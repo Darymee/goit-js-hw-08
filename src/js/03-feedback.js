@@ -12,18 +12,14 @@ const formData = {};
 
 populateTextareaInput();
 
-refs.textarea.addEventListener('input', throttle(onTextareaInput, 500));
-
 refs.form.addEventListener('submit', onFormSubmit);
-
-refs.form.addEventListener('input', e => {
-  formData[e.target.name] = e.target.value;
-  console.log(formData);
-});
+refs.textarea.addEventListener('input', throttle(onTextareaInput, 500));
+refs.form.addEventListener('input', throttle(onInput, 500));
 
 function onFormSubmit(event) {
   event.preventDefault();
-  event.currentTarget.reset();
+  event.target.reset();
+  
   localStorage.getItem(STORAGE_KEY);
   localStorage.removeItem(STORAGE_KEY);
 }
@@ -31,9 +27,15 @@ function onFormSubmit(event) {
 function onTextareaInput(event) {
   const message = event.target.value;
   formData[event.target.name] = message;
-  console.log(message);
-  const formDataStr = JSON.stringify(formData);
-  localStorage.setItem(STORAGE_KEY, formDataStr);
+
+  toStringifyFormData(formData);
+}
+
+function onInput(event) {
+  const email = event.target.value;
+  formData[event.target.name] = email;
+
+  toStringifyFormData(formData);
 }
 
 function populateTextareaInput() {
@@ -42,4 +44,9 @@ function populateTextareaInput() {
     refs.input.value = savedMassage.email;
     refs.textarea.value = savedMassage.message;
   }
+}
+
+function toStringifyFormData() {
+  const formDataStr = JSON.stringify(formData);
+  localStorage.setItem(STORAGE_KEY, formDataStr);
 }
