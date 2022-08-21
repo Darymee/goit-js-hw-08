@@ -3,50 +3,62 @@ import throttle from 'lodash.throttle';
 const refs = {
   form: document.querySelector('.feedback-form'),
   textarea: document.querySelector('.feedback-form textarea'),
-  input: document.querySelector('input'),
+  input: document.querySelector('.feedback-form input'),
 };
 
 const STORAGE_KEY = 'feedback-form-state';
 
 const formData = {};
 
-populateTextareaInput();
+refreshTextarea();
 
 refs.form.addEventListener('submit', onFormSubmit);
-refs.textarea.addEventListener('input', throttle(onTextareaInput, 500));
 refs.form.addEventListener('input', throttle(onInput, 500));
 
-function onFormSubmit(event) {
-  event.preventDefault();
-  event.target.reset();
-  
-  localStorage.getItem(STORAGE_KEY);
+// Записывает значение инпутов в LocalStorage
+
+function onInput(e) {
+  // console.log(e.target.name);
+  // console.log(e.target.value);
+  formData[e.target.name] = e.target.value;
+  // console.log(formData);
+  const formDatatoStringify = JSON.stringify(formData);
+  localStorage.setItem(STORAGE_KEY, formDatatoStringify);
+}
+
+//  Чистит LocalStorage и инпуты после события submit
+
+function onFormSubmit(e) {
+  e.preventDefault();
+
+  console.log(formData);
+  e.currentTarget.reset();
   localStorage.removeItem(STORAGE_KEY);
 }
 
-function onTextareaInput(event) {
-  const message = event.target.value;
-  formData[event.target.name] = message;
+// Обновляет значение инпутов при перезагрузке страницы
 
-  toStringifyFormData(formData);
-}
+function refreshTextarea() {
+  const savedInputs = localStorage.getItem(STORAGE_KEY);
+  const savedInputsToParse = JSON.parse(savedInputs);
 
-function onInput(event) {
-  const email = event.target.value;
-  formData[event.target.name] = email;
-
-  toStringifyFormData(formData);
-}
-
-function populateTextareaInput() {
-  let savedMassage = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  if (savedMassage) {
-    refs.input.value = savedMassage.email;
-    refs.textarea.value = savedMassage.message;
+  if (savedInputsToParse) {
+    console.log(savedInputsToParse);
+    refs.form.email.value = savedInputsToParse.email
+      ? savedInputsToParse.email
+      : '';
+    refs.form.message.value = savedInputsToParse.message
+      ? savedInputsToParse.message
+      : '';
   }
 }
 
-function toStringifyFormData() {
-  const formDataStr = JSON.stringify(formData);
-  localStorage.setItem(STORAGE_KEY, formDataStr);
-}
+// let savedMessage = localStorage.getItem(STORAGE_KEY);
+// let savedMessageToParse = JSON.parse(savedMessage);
+// console.log(savedMessageToParse);
+// console.log(savedMessageToParse.email);
+// console.log(savedMessageToParse.message);
+
+// console.log(formData.email);
+
+//
