@@ -31,6 +31,14 @@ function onInput(e) {
 function onFormSubmit(e) {
   e.preventDefault();
 
+  const {
+    elements: { email, message },
+  } = e.currentTarget;
+
+  if (email.value === '' || message.value === '') {
+    return alert('Лёша заполни все поля, быстро!');
+  }
+
   console.log(formData);
   e.currentTarget.reset();
   localStorage.removeItem(STORAGE_KEY);
@@ -62,3 +70,5 @@ function refreshTextarea() {
 // console.log(formData.email);
 
 //
+
+console.log(refs.form.elements);
