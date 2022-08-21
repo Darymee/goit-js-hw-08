@@ -36,8 +36,10 @@ function onFormSubmit(e) {
   } = e.currentTarget;
 
   if (email.value === '' || message.value === '') {
-    return alert('Лёша заполни все поля, быстро!');
+    return alert('Все поля должны быть заполнены!');
   }
+
+  JSON.parse(localStorage.getItem(STORAGE_KEY));
 
   console.log(formData);
   e.currentTarget.reset();
@@ -71,4 +73,4 @@ function refreshTextarea() {
 
 //
 
-console.log(refs.form.elements);
+// console.log(refs.form.elements);
