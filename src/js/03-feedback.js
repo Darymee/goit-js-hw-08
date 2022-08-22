@@ -8,7 +8,7 @@ const refs = {
 
 const STORAGE_KEY = 'feedback-form-state';
 
-const formData = {};
+let formData = {};
 
 refreshTextarea();
 
@@ -34,7 +34,6 @@ function onFormSubmit(e) {
   const {
     elements: { email, message },
   } = e.currentTarget;
-
   if (email.value === '' || message.value === '') {
     return alert('Все поля должны быть заполнены!');
   }
@@ -49,19 +48,28 @@ function onFormSubmit(e) {
 // Обновляет значение инпутов при перезагрузке страницы
 
 function refreshTextarea() {
-  const savedInputs = localStorage.getItem(STORAGE_KEY);
-  const savedInputsToParse = JSON.parse(savedInputs);
+  if (localStorage.getItem(STORAGE_KEY)) {
+    const savedInputs = localStorage.getItem(STORAGE_KEY);
+    formData = JSON.parse(savedInputs);
 
-  if (savedInputsToParse) {
-    console.log(savedInputsToParse);
-    refs.form.email.value = savedInputsToParse.email
-      ? savedInputsToParse.email
-      : '';
-    refs.form.message.value = savedInputsToParse.message
-      ? savedInputsToParse.message
-      : '';
+    console.log(savedInputs);
+    refs.form.email.value = formData.email ? formData.email : '';
+    refs.form.message.value = formData.message ? formData.message : '';
   }
 }
+// const savedInputs = localStorage.getItem(STORAGE_KEY);
+// const savedInputsToParse = JSON.parse(savedInputs);
+
+//   if (savedInputsToParse) {
+//     console.log(savedInputsToParse);
+//     refs.form.email.value = savedInputsToParse.email
+//       ? savedInputsToParse.email
+//       : '';
+//     refs.form.message.value = savedInputsToParse.message
+//       ? savedInputsToParse.message
+//       : '';
+//   }
+// }
 
 // let savedMessage = localStorage.getItem(STORAGE_KEY);
 // let savedMessageToParse = JSON.parse(savedMessage);
