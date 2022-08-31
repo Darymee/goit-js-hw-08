@@ -43,6 +43,7 @@ function onFormSubmit(e) {
   console.log(formData);
   e.currentTarget.reset();
   localStorage.removeItem(STORAGE_KEY);
+  formData = {};
 }
 
 // Обновляет значение инпутов при перезагрузке страницы
